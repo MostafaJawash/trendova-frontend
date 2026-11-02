@@ -22,7 +22,7 @@ test('stage 1 auth flow has no logged-out API noise', async ({ page }) => {
   await page.getByLabel('تأكيد كلمة المرور').fill('password123')
   await page.getByRole('button', { name: 'إنشاء الحساب' }).click()
   await expect(page).toHaveURL(/#\/$/)
-  await expect(page.getByRole('heading', { name: /مرحباً بك/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'المنتجات' })).toBeVisible()
 
   await page.getByRole('button', { name: 'تسجيل الخروج' }).click()
   await expect(page).toHaveURL(/#\/login\?next=/)

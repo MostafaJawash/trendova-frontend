@@ -12,6 +12,7 @@ test('customer can browse, filter, favorite, cart, order, and update profile', a
   await expect(page.locator('.card').first()).toBeVisible()
   await page.getByLabel('البحث').fill('Demo')
   await expect(page).toHaveURL(/search=Demo/)
+  await page.getByLabel('البحث').fill('')
   await page.getByLabel('الترتيب').selectOption('priceAsc')
   await expect(page).toHaveURL(/sort=priceAsc/)
   await page.locator('.card').first().getByRole('button', { name: 'تبديل المفضلة' }).click()
