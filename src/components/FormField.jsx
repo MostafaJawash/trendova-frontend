@@ -1,0 +1,1 @@
+export function FormField({ label, error, ...inputProps }) { return <label className="form-field"><span>{label}</span><input {...inputProps} />{error && <small className="field-error">{error}</small>}</label> }
