@@ -16,10 +16,12 @@ export function Navbar() {
     let active = true
     const refresh = () => api('GET', '/notifications', { query: { unread: true, page: 1, limit: 1 } }).then((result) => { if (active) setUnread(result.total || 0) }).catch(() => {})
     refresh()
+    const refreshNow = () => refresh()
+    window.addEventListener('notifications:changed', refreshNow)
     const interval = window.setInterval(refresh, 60000)
-    return () => { active = false; window.clearInterval(interval) }
+    return () => { active = false; window.clearInterval(interval); window.removeEventListener('notifications:changed', refreshNow) }
   }, [user])
 
   const handleLogout = async () => { await logout(); navigate('/login') }
-  return <header className="navbar"><Link className="brand" to="/">Trendova</Link><nav>{user ? <><Link to="/cart">السلة <b className="counter">{count}</b></Link><Link to="/notifications">الإشعارات <b className="counter">{unread}</b></Link><Link to="/profile">{user.name}</Link>{isAdmin && <Link to="/admin">الإدارة</Link>}<button type="button" className="button--text" onClick={handleLogout}>تسجيل الخروج</button></> : <><Link to="/login">تسجيل الدخول</Link><Link to="/register">حساب جديد</Link></>}</nav></header>
+  return <header className="navbar"><Link className="brand" to="/">Trendova</Link><nav>{user ? <><Link to="/favorites">المفضلة</Link><Link to="/orders">طلباتي</Link><Link to="/cart">السلة <b className="counter">{count}</b></Link><Link to="/notifications">الإشعارات <b className="counter">{unread}</b></Link><Link to="/profile">{user.name}</Link>{isAdmin && <Link to="/admin">الإدارة</Link>}<button type="button" className="button--text" onClick={handleLogout}>تسجيل الخروج</button></> : <><Link to="/login">تسجيل الدخول</Link><Link to="/register">حساب جديد</Link></>}</nav></header>
 }

@@ -1,0 +1,26 @@
+import { test, expect } from '@playwright/test'
+
+test('customer can browse, filter, favorite, cart, order, and update profile', async ({ page }) => {
+  const email = `stage2-${Date.now()}@example.com`
+  await page.goto('/#/register')
+  await page.getByLabel('الاسم').fill('Stage Two User')
+  await page.getByLabel('البريد الإلكتروني').fill(email)
+  await page.getByLabel('كلمة المرور', { exact: true }).fill('password123')
+  await page.getByLabel('تأكيد كلمة المرور').fill('password123')
+  await page.getByRole('button', { name: 'إنشاء الحساب' }).click()
+  await expect(page.getByRole('heading', { name: 'المنتجات' })).toBeVisible()
+  await expect(page.locator('.card').first()).toBeVisible()
+  await page.getByLabel('البحث').fill('Demo')
+  await expect(page).toHaveURL(/search=Demo/)
+  await page.getByLabel('الترتيب').selectOption('priceAsc')
+  await expect(page).toHaveURL(/sort=priceAsc/)
+  await page.locator('.card').first().getByRole('button', { name: 'تبديل المفضلة' }).click()
+  await page.locator('.card').first().getByRole('button', { name: 'أضف للسلة' }).click()
+  await page.getByRole('link', { name: /السلة/ }).click()
+  await page.getByRole('button', { name: 'إتمام الطلب' }).click()
+  await expect(page).toHaveURL(/#\/orders\//)
+  await page.getByRole('link', { name: 'Stage Two User' }).click()
+  await page.getByLabel('الاسم').fill('Updated Stage Two')
+  await page.getByRole('button', { name: 'حفظ البيانات' }).click()
+  await expect(page.getByRole('link', { name: 'Updated Stage Two' })).toBeVisible()
+})

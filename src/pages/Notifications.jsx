@@ -1,0 +1,8 @@
+import { useEffect, useState } from 'react'
+import { api } from '../api/client'
+import { EmptyState } from '../components/EmptyState'
+import { ErrorState } from '../components/ErrorState'
+import { LoadingState } from '../components/LoadingState'
+import { Pagination } from '../components/Pagination'
+
+export function Notifications() { const [page, setPage] = useState(1); const [data, setData] = useState(null); const [error, setError] = useState(null); const changed = () => window.dispatchEvent(new Event('notifications:changed')); const load = () => { setError(null); api('GET', '/notifications', { query: { page, limit: 10 } }).then(setData).catch(setError) }; useEffect(() => { load() }, [page]); const mark = async (id) => { await api('PATCH', `/notifications/${id}/read`); changed(); load() }; const markAll = async () => { await api('POST', '/notifications/read-all'); changed(); load() }; if (error) return <ErrorState error={error} onRetry={load} />; if (!data) return <LoadingState />; return <><header className="page-header"><h1>الإشعارات</h1><button type="button" onClick={markAll}>تعليم الكل كمقروء</button></header>{data.items.length ? <>{data.items.map((item) => <article className={`notification ${item.is_read ? '' : 'notification--unread'}`} key={item.id}><div className="row row--between"><h2>{item.title}</h2>{!item.is_read && <button type="button" onClick={() => mark(item.id)}>تمت القراءة</button>}</div><p>{item.message}</p><time className="notification__date">{new Date(item.created_at).toLocaleString('ar')}</time></article>)}<Pagination page={data.page} pages={data.pages} onPageChange={setPage} /></> : <EmptyState message="لا توجد إشعارات" />}</> }
