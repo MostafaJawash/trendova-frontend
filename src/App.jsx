@@ -15,7 +15,12 @@ import { Orders } from './pages/Orders'
 import { OrderDetail } from './pages/OrderDetail'
 import { Profile } from './pages/Profile'
 import { Notifications } from './pages/Notifications'
-import { AuthenticatedHome } from './pages/AuthenticatedHome'
+import { AdminDashboard } from './pages/AdminDashboard'
+import { AdminProducts } from './pages/AdminProducts'
+import { AdminProductForm } from './pages/AdminProductForm'
+import { AdminCategories } from './pages/AdminCategories'
+import { AdminUsers } from './pages/AdminUsers'
+import { AdminOrders } from './pages/AdminOrders'
 
 function App() {
   const guard = (page) => <ProtectedRoute>{page}</ProtectedRoute>
@@ -37,7 +42,13 @@ function App() {
                 <Route path="/orders/:id" element={guard(<OrderDetail />)} />
                 <Route path="/profile" element={guard(<Profile />)} />
                 <Route path="/notifications" element={guard(<Notifications />)} />
-                <Route path="/admin/*" element={<AdminRoute><AuthenticatedHome /></AdminRoute>} />
+                <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+                <Route path="/admin/products" element={<AdminRoute><AdminProducts /></AdminRoute>} />
+                <Route path="/admin/products/new" element={<AdminRoute><AdminProductForm /></AdminRoute>} />
+                <Route path="/admin/products/:id/edit" element={<AdminRoute><AdminProductForm /></AdminRoute>} />
+                <Route path="/admin/categories" element={<AdminRoute><AdminCategories /></AdminRoute>} />
+                <Route path="/admin/users" element={<AdminRoute><AdminUsers /></AdminRoute>} />
+                <Route path="/admin/orders" element={<AdminRoute><AdminOrders /></AdminRoute>} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </main>
